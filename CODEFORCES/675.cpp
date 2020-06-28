@@ -1,8 +1,15 @@
 #include <bits/stdc++.h>
-#define INF 1000'000'000
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp> // Including tree_order_statistics_node_update
+#include <ext/pb_ds/detail/standard_policies.hpp>
+#define INF 2000'000'000
+
 using namespace std;
+using namespace __gnu_pbds;
 typedef long long ll;
 typedef unsigned long long ull;
+typedef tree<int, null_type,less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
+
 
 template<typename T>
 struct sparse_table{
@@ -29,7 +36,7 @@ struct sparse_table{
 		}
 	}
 	
-	T query_o1(int l, int r){// overlap friendly
+	T query_o1(int l, int r){// overlap freindly
 		if(l > r)
 			swap(l,r);
 		int msb = __lg(r - l + 1), s_range = 1 << msb;
@@ -40,7 +47,7 @@ struct sparse_table{
 		if(l > r)
 			swap(l,r);
 		T ans;
-		bool started = 0;// not to add initall value to ans
+		bool started = 0;// not to add initall value add 
 		while(l <= r){
 			int msb = __lg(r - l + 1);
 			auto nxt = table[msb][l]; l += 1 << msb;
@@ -53,3 +60,35 @@ struct sparse_table{
 	}
 };
 
+vector < int > a(1e5+5);
+
+int combine(int l, int r){
+	return a[l] >= a[r] ? l : r;
+}
+
+int main(){
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL), cout.tie(NULL);
+	//freopen("in", "r", stdin);
+	ll n, ans = 0;
+	cin >> n;
+	vector < int > tmp(n+1);
+	vector < ll >  dp(n+1);
+	for(int i = 1; i  < n; i++){
+		cin >> a[i];
+		tmp[i] = i;
+	}
+	tmp[n] = n;
+	sparse_table<int> st(n+1, tmp, combine);
+	for(int i = n-1; i >= 1; i--){
+		// find max in range i to a[i]
+		int mx = st.query_o1(i+1, a[i]);
+		if(a[i] >= n)
+			dp[i] = n - i;
+		else
+			dp[i] = mx - i + n - a[i] + dp[mx];
+		ans += dp[i];
+	}
+	cout << ans << endl;
+	return 0;
+}
