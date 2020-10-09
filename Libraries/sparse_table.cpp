@@ -4,17 +4,18 @@ using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
 
-template<typename T>
+
+template<typename T, T(*combine)(T, T)>
 struct sparse_table{
 	int n;
 	vector < vector < T > > table;
-	T (*combine) (T,T);
 	
-	sparse_table(int N, vector < T > & v, T (*comb) (T,T)){
-		n = N, combine = comb;
+	sparse_table(const int N, const vector < T > & v = {}): n(N){
 		table.assign(__lg(n)+1, vector < T > (n));
-		build_sparse_table(v);
+		if(v.size())
+			build_sparse_table(v);
 	}
+	
 	void build_sparse_table(const vector < T > & v){
 			
 		for(int i = 0; i < n; i++)// for 0 based array
@@ -52,4 +53,3 @@ struct sparse_table{
 		return ans;
 	}
 };
-
