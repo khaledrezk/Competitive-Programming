@@ -112,11 +112,11 @@ struct implicit_treap{
 		print(T -> r);
 	}
 	
-	void split_rng(node *& prv, node *& rng, node *& after, int l, int r){
-		split(root, rng, after, r+1);
+	void split_rng(node *& T, node *& prv, node *& rng, node *& after, int l, int r){
+		split(T, rng, after, r+1);
 		split(rng, prv, rng, l);
 	}
-
+	
 	void cyc_shift(node *& T){
 		// get last item in r
 		int sz = T -> sz;
@@ -127,7 +127,7 @@ struct implicit_treap{
 	
 	void cyc_shift(int l, int r){
 		node *prv, *rng, *after;
-		split_rng(prv, rng, after, l, r);
+		split_rng(root, prv, rng, after, l, r);
 		cyc_shift(rng);
 		merge(root, prv, rng);
 		merge(root, root, after);
@@ -135,7 +135,7 @@ struct implicit_treap{
 	
 	void reverse(int l, int r){
 		node * prv, *rng, *after;
-		split_rng(prv, rng, after, l, r);
+		split_rng(root, prv, rng, after, l, r);
 		rng -> reverse();
 		merge(root, prv, rng);
 		merge(root, root, after);
