@@ -21,6 +21,14 @@ struct implicit_treap{
 		node(int v, node* lf = empty, node * rt = empty){
 			val = v, sz = 1, is_rev = 0, priority = rand(), l = lf, r = rt;
 		}
+		
+		~node(){
+			if(l != empty)
+				delete l;
+			if(r != empty)
+				delete r;
+		}
+		
 		void push_up(){
 			if(this != empty)
 				sz = 1 + l -> sz + r -> sz;
@@ -43,6 +51,12 @@ struct implicit_treap{
 	
 	implicit_treap(){
 		root = node::empty;
+	}
+	
+		
+	~implicit_treap(){
+		if(root != node::empty)
+			delete root;
 	}
 	
 	void split(node* T, node *& l, node *& r, int lsz){
