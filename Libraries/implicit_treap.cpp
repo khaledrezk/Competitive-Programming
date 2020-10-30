@@ -1,7 +1,5 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp> // Common file
-#include <ext/pb_ds/tree_policy.hpp> // Including tree_order_statistics_node_update
-#include <ext/pb_ds/detail/standard_policies.hpp>
+#include <ext/pb_ds/assoc_container.hpp>
 #define INF 2000'000'000
 using namespace std; 
 using namespace __gnu_pbds;
@@ -9,7 +7,8 @@ typedef long long ll;
 typedef unsigned long long ull;
 typedef long double ld;
 template<typename T> using ordered_set = tree<T , null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-
+ 
+ 
 struct implicit_treap{
 	struct node{
 		int val, priority, sz;
@@ -23,7 +22,8 @@ struct implicit_treap{
 			val = v, sz = 1, is_rev = 0, priority = rand(), l = lf, r = rt;
 		}
 		void push_up(){
-			sz = 1 + l -> sz + r -> sz;
+			if(this != empty)
+				sz = 1 + l -> sz + r -> sz;
 		}
 		
 		void push_down(){
@@ -142,11 +142,38 @@ struct implicit_treap{
 	int at(int idx){	
 		return at(root, idx);
 	}
+	
+	int erase(node* &T, int idx){
+		T -> push_down();
+		if(T == node::empty){// never happens
+			exit(1);
+		}
+		int lsz = T -> l -> sz, ans;
+		if(idx < lsz)
+			ans = erase(T -> l, idx);
+		else if(idx == lsz){
+			node * tmp = T;
+			merge(T, T->l, T->r);
+			ans = tmp -> val;
+			delete tmp;
+		}
+		else{
+			ans = erase(T->r, idx-lsz-1);
+		}
+		T -> push_up();
+		return ans;
+	}
+	
+	int erase(int idx){
+		return erase(root, idx);
+	}
+	
 };
 implicit_treap::node* implicit_treap::node::empty = new implicit_treap::node;
 
 implicit_treap tr;
 
+ 
 int main(){
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL), cout.tie(NULL);
