@@ -143,6 +143,26 @@ struct implicit_treap{
 		return at(root, idx);
 	}
 	
+	void update(node* T, int idx, int val){
+		if(T == node::empty)
+			exit(1);
+		T -> push_down();
+		int lsz = T -> l -> sz;
+		if(idx < lsz)
+			update(T -> l, idx, val);
+		else if(idx == lsz){
+			T -> val = val;
+		}
+		else
+			update(T -> r, idx - lsz - 1, val);	
+		T -> push_up();
+	}
+	
+	void update(int idx, int val){
+		update(root, idx, val);
+	}
+	
+	
 	int erase(node* &T, int idx){
 		T -> push_down();
 		if(T == node::empty){// never happens
@@ -173,6 +193,7 @@ implicit_treap::node* implicit_treap::node::empty = new implicit_treap::node;
 
 implicit_treap tr;
 
+ 
  
 int main(){
 	ios_base::sync_with_stdio(false);
