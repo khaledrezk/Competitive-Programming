@@ -66,7 +66,7 @@ struct Trie{
 		}
 	}
 	
-	void match(const string & s, vector < pair<int, int> > ids){//{patId, index of last letter of match in s.
+	void match(const string & s, vector < pair<int, int> > &ids){//{patId, index of last letter of match in s.
 		int cur = 0;
 		for(int i = 0; i < (int)s.size(); i++){
 			cur = T[cur].nxt_lnk[s[i]-'a'];
